@@ -1,0 +1,48 @@
+@import '/src/style/variables.scss';
+
+.login-form {
+    & .alert {
+        padding: 0.5rem 1rem;
+    }
+    & h3 {
+        font-family: 'Roboto Slab', sans-serif;
+        text-align: center;
+        font-weight: 400;
+    }
+    & .form-group {
+        margin-bottom: 10px;
+        & .form-control {
+            &:focus {
+                border-color: #c7c7c7;
+                box-shadow: 0 0 0 0.25rem rgb(253 183 192 / 44%);
+            }
+        }
+    }
+    & .checkbox {
+        margin-bottom: 10px;
+        & label {
+            font-size: $pm-10;
+        }
+    }
+    & #login-btn {
+        background-color: #fdb7c0;
+        border: none;
+        &:hover {
+            color: #842029;
+        }
+        &:focus {
+            box-shadow: 0 0 0 0.25rem rgb(14 12 9 / 20%);
+        }
+    }
+    & #forgot-btn {
+        background-color: black;
+        border: none;
+        color: white;
+        &:hover {
+            color: #fdb7c0 !important;
+        }
+        &:focus {
+            box-shadow: 0 0 0 0.25rem rgb(14 12 9 / 20%);
+        }
+    }
+}

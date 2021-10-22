@@ -1,0 +1,15 @@
+@import '/src/style/variables.scss';
+
+.adminPage {
+    background: $color-gray-100;
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    &-content {
+        padding-top: $header;
+        height: 100%;
+        position: relative;
+        // width: -webkit-fill-available;
+        flex: 20;
+    }
+}

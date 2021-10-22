@@ -1,0 +1,76 @@
+@import '/src/style/variables.scss';
+
+.adminHeader {
+    height: $header;
+    border-bottom: 0.5px solid $color-gray-300;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    padding: 0 1rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    &-sidebarBtn {
+        padding: 0.5rem 1.5rem;
+        height: 100%;
+        // display: inline-flex;
+        & button {
+            border: none;
+            background: inherit;
+            color: $color-gray-500;
+            &:hover svg {
+                color: black;
+            }
+        }
+    }
+    &-navLinks {
+        height: 100%;
+        margin-right: auto !important;
+        & ul {
+            list-style-type: none;
+            margin: 0;
+            display: flex;
+        }
+    }
+    &-info {
+        width: 30%;
+        margin-left: auto;
+        flex-direction: row-reverse;
+        &-item {
+            padding: 0.5rem;
+        }
+        & button {
+            background: transparent;
+        }
+    }
+}
+
+.user {
+    position: relative;
+    &-avatar {
+        display: flex;
+        align-items: center;
+        & img {
+            border-radius: 50%;
+        }
+    }
+    &-name {
+        padding: 0.2rem;
+        & b {
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto,
+                helvetica neue, Arial, noto sans, sans-serif, apple color emoji,
+                segoe ui emoji, segoe ui symbol, noto color emoji;
+            color: black;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+    }
+}
+
+.notification {
+    padding: 0.5rem 1rem;
+    &-icon {
+        color: gray;
+        &:hover svg {
+            color: black;
+        }
+    }
+}

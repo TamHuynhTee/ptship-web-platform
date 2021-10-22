@@ -1,0 +1,87 @@
+.home-navbar {
+    width: 100%;
+    height: 80px;
+    background-color: #fdb7c0;
+    position: relative;
+    margin-bottom: 88px;
+    border-bottom: 1px solid 1px solid #ababab;
+    box-shadow: 0 4px 2px -2px rgb(0 0 0 / 20%);
+}
+
+@media only screen and (max-width: 1367px) {
+    .home-navbar {
+        height: 50px;
+        margin-bottom: 71px;
+    }
+    .logo > img,
+    .logo {
+        height: 96px;
+        width: 96px;
+    }
+}
+
+.logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo:hover {
+    cursor: pointer;
+}
+
+.home-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url('https://www.xmple.com/wallpaper/stripes-pink-lines-white-streaks-1920x1080-c2-ffb6c1-fff0f5-l2-62-62-a-90-f-1.svg');
+    background-position: cover;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.home-footer {
+    height: 40px;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.home-footer #footer-content {
+    color: white;
+    font-size: 18px;
+}
+
+.home-body {
+    min-height: 50%;
+    padding: 50px 100px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.home-body > #login-frame {
+    border: 1px solid #d8d8d8;
+    min-height: 200px;
+    width: 400px;
+    padding: 20px;
+    border-radius: 5px;
+    background: white;
+}
+
+.home-body > #login-frame:hover {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.animation-container {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px solid black;
+}
