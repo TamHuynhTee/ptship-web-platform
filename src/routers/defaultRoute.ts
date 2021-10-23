@@ -1,5 +1,5 @@
 export const defaultRoute = {
     UnauthenticatedHome: '/',
-    AdminDashboard: '/admin',
+    Dashboard: '/dashboard',
     CustomerDashboard: '/customer',
 };

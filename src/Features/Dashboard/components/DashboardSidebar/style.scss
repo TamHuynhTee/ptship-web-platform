@@ -1,0 +1,48 @@
+@import '/src/style/variables.scss';
+
+.dashboardSidebar {
+    width: 320px;
+    background: #fff5f7;
+    &-header {
+        height: $header;
+        width: 100%;
+        background: black;
+        & img {
+            height: 100%;
+            width: 100%;
+        }
+    }
+    &-body {
+        height: calc(100% - $header);
+        padding: $pm-10;
+        overflow-y: auto;
+
+        &-list {
+            list-style: none;
+            padding: 0;
+            & li {
+                padding-left: $pm-20;
+                height: $pm-20;
+                display: flex;
+                align-items: center;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #efb2b2;
+                    & > a {
+                        color: #fff;
+                    }
+                }
+
+                & > a {
+                    color: #f17575;
+                    font-size: 1.25rem;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    transition: all 1s;
+}

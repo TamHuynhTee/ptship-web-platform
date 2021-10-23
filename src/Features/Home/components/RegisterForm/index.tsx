@@ -1,9 +1,10 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SignupSchema } from '../../validates';
-import authApi from '../../apis/authApi';
-import { notifySuccess } from '../../utils/notify';
+import { SignUpSchema } from '../../../../validates';
+import authApi from '../../../../apis/authApi';
+import { notifySuccess } from '../../../../utils/notify';
+import { FormTitle } from '../FormTitle';
 
 interface RegisterFormProps {
     ChangePage: Function;
@@ -17,7 +18,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm({ resolver: yupResolver(SignupSchema) });
+    } = useForm({ resolver: yupResolver(SignUpSchema) });
     const handleShowPass = (e: any) => {
         setShowPass(e.target.checked);
         const type = showPass ? 'password' : 'text';
@@ -58,7 +59,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="login-form">
-                <h3>TÀI KHOẢN MỚI</h3>
+                <FormTitle title="TÀI KHOẢN MỚI" />
                 {error !== '' && (
                     <div className="alert alert-danger">{error}</div>
                 )}

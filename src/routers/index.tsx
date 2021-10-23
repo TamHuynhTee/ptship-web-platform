@@ -1,7 +1,8 @@
 import React, { Suspense } from 'react';
 import { Switch, BrowserRouter, Route } from 'react-router-dom';
+import { Dashboard } from '../Features/Dashboard/index';
 import Admin from '../pages/admin';
-import Home from '../pages/home';
+import Home from '../Features/Home/pages/home';
 import { Loading } from '../static/Loading';
 import { NotFound } from '../static/NotFound';
 import { defaultRoute } from './defaultRoute';
@@ -25,10 +26,10 @@ const routes: Array<IRoute> = [
     {
         child: (
             <>
-                <Admin />
+                <Dashboard />
             </>
         ),
-        path: defaultRoute.AdminDashboard,
+        path: defaultRoute.Dashboard,
         exact: true,
     },
 ];

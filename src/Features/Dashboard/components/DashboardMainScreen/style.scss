@@ -1,0 +1,7 @@
+@import '/src/style/variables.scss';
+
+.dashboardScreen {
+    min-height: 100%;
+    background: inherit;
+    overflow-y: auto;
+}

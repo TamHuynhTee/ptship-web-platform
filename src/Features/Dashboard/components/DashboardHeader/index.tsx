@@ -1,10 +1,10 @@
 import React from 'react';
-import { DropdownMenu } from '../DropdownMenu';
+import { DropdownMenu } from '../../../../components/DropdownMenu';
 import './style.scss';
 
 interface AdminHeaderProps {
     Logout?: Function;
-    openSidebar: Function;
+    openSidebar?: Function;
 }
 
 const img = 'https://picsum.photos/seed/picsum/300/300';
@@ -14,7 +14,7 @@ const user = {
     avatar: img,
 };
 
-function AdminHeader(props: AdminHeaderProps) {
+function DashboardHeader(props: AdminHeaderProps) {
     const handleLogout = () => {
         props.Logout!();
         // console.log('Logged out');
@@ -24,7 +24,7 @@ function AdminHeader(props: AdminHeaderProps) {
     return (
         <div className="adminHeader flex width-100">
             <div className="adminHeader-sidebarBtn inlineFlex">
-                <button onClick={() => props.openSidebar()}>
+                <button>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="36"
@@ -100,4 +100,4 @@ function AdminHeader(props: AdminHeaderProps) {
     );
 }
 
-export default AdminHeader;
+export default DashboardHeader;

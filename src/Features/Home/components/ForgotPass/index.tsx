@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import './style.scss';
+import { FormTitle } from '../FormTitle';
 
 interface ForgotPassProps {
     ChangePage: Function;
@@ -13,7 +12,7 @@ function ForgotPass(props: ForgotPassProps) {
     return (
         <form onSubmit={(e) => e.preventDefault()}>
             <div className="login-form">
-                <h3>QUÊN MẬT KHẨU</h3>
+                <FormTitle title="QUÊN MẬT KHẨU" />
                 <p className="mb-2">
                     Hãy gọi đến số điện thoại 0908xxxxxx để được hỗ trợ lấy lại
                     mật khẩu
