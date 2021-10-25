@@ -1,10 +1,13 @@
 import React from 'react';
 import { DropdownMenu } from '../../../../components/DropdownMenu';
+import { ToggleSidebar } from '../ToggleSidebar';
+import defaultAvatar from '../../../../images/Logo128.png';
 import './style.scss';
 
-interface AdminHeaderProps {
-    Logout?: Function;
-    openSidebar?: Function;
+interface DashboardHeaderProps {
+    name?: string;
+    phone?: string;
+    avatar?: string;
 }
 
 const img = 'https://picsum.photos/seed/picsum/300/300';
@@ -14,31 +17,13 @@ const user = {
     avatar: img,
 };
 
-function DashboardHeader(props: AdminHeaderProps) {
-    const handleLogout = () => {
-        props.Logout!();
-        // console.log('Logged out');
-        // history.push('/');
-    };
+function DashboardHeader(props: DashboardHeaderProps) {
+    const { name, phone, avatar } = props;
 
     return (
         <div className="adminHeader flex width-100">
             <div className="adminHeader-sidebarBtn inlineFlex">
-                <button>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="36"
-                        height="36"
-                        fill="currentColor"
-                        className="bi bi-list"
-                        viewBox="0 0 16 16"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                        />
-                    </svg>
-                </button>
+                <ToggleSidebar />
             </div>
             <div className="adminHeader-info flex height-100">
                 <div className="adminHeader-info-item inlineFlex user btn-group">
@@ -47,14 +32,15 @@ function DashboardHeader(props: AdminHeaderProps) {
                         data-bs-toggle="dropdown"
                     >
                         <img
-                            src={user.avatar}
+                            src={avatar ? avatar : defaultAvatar}
                             alt="avatar"
-                            width={36}
-                            height={36}
+                            width={48}
+                            height={48}
                         />
-                        <span className="user-name">
-                            <b>{user.name}</b>
-                        </span>
+                        <div className="user-name">
+                            <b>{name}</b>
+                            <p>{phone}</p>
+                        </div>
                     </button>
                     <DropdownMenu id="dropdown-user">
                         <li>
@@ -65,7 +51,8 @@ function DashboardHeader(props: AdminHeaderProps) {
                         <li>
                             <button
                                 className="dropdown-item"
-                                onClick={handleLogout}
+                                data-bs-toggle="modal"
+                                data-bs-target="#logoutConfirm"
                             >
                                 Đăng xuất
                             </button>

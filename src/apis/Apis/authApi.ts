@@ -1,15 +1,20 @@
-import axiosClient from './axiosClient';
+import axiosClient from '../axiosClient';
+import {
+    IChangePasswordBody,
+    ILoginBody,
+    IRegisterBody,
+} from '../body/authBody';
 
 class AuthApi {
-    login = (body: any) => {
+    login = (body: ILoginBody) => {
         const url = '/auth/login';
         return axiosClient.post(url, body);
     };
-    register = (body: any) => {
+    register = (body: IRegisterBody) => {
         const url = '/auth/register';
         return axiosClient.post(url, body);
     };
-    changePass = (body: any) => {
+    changePass = (body: IChangePasswordBody) => {
         const url = '/auth/changePassword';
         return axiosClient.post(url, body);
     };
@@ -20,6 +25,10 @@ class AuthApi {
     getAllUser = (params: any) => {
         const url = '/auth/findAllUser';
         return axiosClient.get(url, { params });
+    };
+    getUser = () => {
+        const url = '/auth/findUser';
+        return axiosClient.get(url);
     };
 }
 const authApi = new AuthApi();

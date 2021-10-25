@@ -48,12 +48,14 @@
     &-avatar {
         display: flex;
         align-items: center;
+        gap: 0.5rem;
         & img {
             border-radius: 50%;
         }
     }
     &-name {
         padding: 0.2rem;
+        text-align: left;
         & b {
             font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto,
                 helvetica neue, Arial, noto sans, sans-serif, apple color emoji,

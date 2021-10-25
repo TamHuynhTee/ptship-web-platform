@@ -2,9 +2,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SignUpSchema } from '../../../../validates';
-import authApi from '../../../../apis/authApi';
+import authApi from '../../../../apis/Apis/authApi';
 import { notifySuccess } from '../../../../utils/notify';
 import { FormTitle } from '../FormTitle';
+import { IRegisterBody } from '../../../../apis/body/authBody';
 
 interface RegisterFormProps {
     ChangePage: Function;
@@ -34,7 +35,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         e.preventDefault();
         return new Promise((resolve) => {
             setTimeout(() => {
-                const body = {
+                const body: IRegisterBody = {
                     phone: data.phone,
                     password: data.password,
                     displayName: data.name,

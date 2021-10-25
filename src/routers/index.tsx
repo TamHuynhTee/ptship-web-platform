@@ -1,16 +1,22 @@
 import React, { Suspense } from 'react';
 import { Switch, BrowserRouter, Route } from 'react-router-dom';
 import { Dashboard } from '../Features/Dashboard/index';
-import Admin from '../pages/admin';
 import Home from '../Features/Home/pages/home';
 import { Loading } from '../static/Loading';
 import { NotFound } from '../static/NotFound';
 import { defaultRoute } from './defaultRoute';
 
 interface IRoute {
-    exact: Boolean;
+    exact: boolean;
     path: string;
     child: React.ReactChild | any;
+}
+
+export interface IPrivateRoute {
+    exact?: boolean;
+    path: string;
+    option?: boolean;
+    roleRoute?: Array<number>;
 }
 
 const routes: Array<IRoute> = [
@@ -56,9 +62,9 @@ const Router = () => {
             <BrowserRouter>
                 <Switch>
                     {renderRoutes(routes)}
-                    <Route path="*">
+                    {/* <Route path="*">
                         <NotFound />
-                    </Route>
+                    </Route> */}
                 </Switch>
             </BrowserRouter>
         </Suspense>

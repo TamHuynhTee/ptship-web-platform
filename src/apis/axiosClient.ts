@@ -13,13 +13,14 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
     (config: any) => {
+        // const remembered = localStorage.getItem('remembered');
         const token = localStorage.getItem('token');
+        // else token = sessionStorage.getItem('token');
         if (token) config.headers.authorization = `Bearer ${token}`;
         return config;
     },
     (err) => {
         console.log(err.response);
-
         return Promise.reject(err);
     }
 );

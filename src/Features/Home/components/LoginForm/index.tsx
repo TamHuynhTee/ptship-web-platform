@@ -2,7 +2,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
-import authApi from '../../../../apis/authApi';
+import authApi from '../../../../apis/Apis/authApi';
+import { ILoginBody } from '../../../../apis/body/authBody';
+import { notifySuccess } from '../../../../utils/notify';
 import { SignInSchema } from '../../../../validates';
 import { FormTitle } from '../FormTitle';
 import './style.scss';
@@ -13,7 +15,6 @@ interface LoginFormProps {
 
 function LoginForm(props: LoginFormProps) {
     const [error, setError] = useState('');
-    const [showPass, setShowPass] = React.useState(false);
     const history = useHistory();
     const {
         register,
@@ -22,41 +23,39 @@ function LoginForm(props: LoginFormProps) {
         reset,
     } = useForm({ resolver: yupResolver(SignInSchema) });
 
-    const submitHandler = (e: any) => {
-        e.preventDefault();
-    };
-
     const handleChangePage = (page: number) => {
         props.ChangePage(page);
     };
 
     const handleShowPass = (e: any) => {
-        setShowPass(e.target.checked);
-        const type = showPass ? 'password' : 'text';
+        const type = e.target.checked ? 'password' : 'text';
         document.getElementById('password')?.setAttribute('type', type);
     };
 
     const onSubmit = (data: any, e: any) => {
         e.preventDefault();
         return new Promise((resolve) => {
-            setTimeout(() => {
-                const body = {
+            setTimeout(async () => {
+                const body: ILoginBody = {
                     phone: data.phone,
                     password: data.password,
                 };
-                const response: any = authApi.login(body);
-                response
-                    .then((res: any) => {
-                        if (res.data.token) {
-                            localStorage.setItem('token', res.data.token);
-                            history.push('/dashboard');
-                        } else {
-                            setError('Số điện thoại hoặc mật khẩu sai');
-                        }
-                    })
-                    .catch((err: any) => console.log(err));
+                const response: any = await authApi.login(body);
+                if (Object.keys(response.data).length === 0) {
+                    setError(
+                        response.message === 'Invalid password !!'
+                            ? 'Sai mật khẩu'
+                            : 'Không tìm thấy số điện thoại'
+                    );
+                    resolve(true);
+                    return;
+                }
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('role', response.data.role);
+                history.push('/dashboard');
+                notifySuccess('Đăng nhập thành công');
                 resolve(true);
-            }, 1500);
+            }, 2000);
         });
     };
 
@@ -92,7 +91,6 @@ function LoginForm(props: LoginFormProps) {
                     <label>
                         <input
                             type="checkbox"
-                            checked={showPass}
                             onChange={handleShowPass}
                             id="showPass"
                         />{' '}
@@ -101,7 +99,8 @@ function LoginForm(props: LoginFormProps) {
                 </div>
                 <div className="checkbox">
                     <label>
-                        <input type="checkbox" /> Duy trì đăng nhập
+                        <input type="checkbox" {...register('remembered')} />{' '}
+                        Duy trì đăng nhập
                     </label>
                 </div>
                 <div className="d-grid gap-2 mb-2">

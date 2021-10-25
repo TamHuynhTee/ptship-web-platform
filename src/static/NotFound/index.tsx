@@ -15,11 +15,9 @@ export const NotFound = () => {
                 </p>
                 <button
                     className="btn btn-outline-dark"
-                    onClick={() =>
-                        history.push(defaultRoute.UnauthenticatedHome)
-                    }
+                    onClick={() => history.goBack()}
                 >
-                    Trở về trang chủ
+                    Trở về
                 </button>
             </div>
         </div>

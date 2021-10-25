@@ -2,34 +2,41 @@ import React from 'react';
 import './style.scss';
 import banner from '../../../../images/Banner-logo.svg';
 import { Link } from 'react-router-dom';
+import { useRouteMatch } from 'react-router';
+import { SidebarIcon } from '../SidebarIcon';
 interface DashboardSidebarProps {
     sidebar?: boolean;
     role?: number;
 }
 
 function DashboardSidebar(props: DashboardSidebarProps) {
+    const match = useRouteMatch();
     const { role } = props;
     return (
         <div className="dashboardSidebar">
             <div className="dashboardSidebar-header">
                 <img src={banner} alt="" />
             </div>
-            <div className="dashboardSidebar-body">
+            <div className="dashboardSidebar-body d-flex flex-column">
                 <SidebarTitle title="CHUNG" />
                 <ul className="dashboardSidebar-body-list">
                     <li>
-                        <i className="bi-alarm"></i>
-                        <Link to="#">Trang chủ</Link>
+                        <Link to={`${match.url}`}>
+                            <SidebarIcon type="bi-house-door" />
+                            Trang chủ
+                        </Link>
                     </li>
                     <li>
-                        <i className="bi-alarm"></i>
-                        <Link to="#">Thông tin cá nhân</Link>
+                        <Link to={`${match.url}/profile`}>
+                            <SidebarIcon type="bi-person-circle" />
+                            Thông tin cá nhân
+                        </Link>
                     </li>
                     <li>
-                        <Link to="#">Chỉnh sửa mật khẩu</Link>
-                    </li>
-                    <li>
-                        <Link to="#">Đăng xuất</Link>
+                        <Link to={`${match.url}/resetPass`}>
+                            <SidebarIcon type="bi-key-fill" />
+                            Chỉnh sửa mật khẩu
+                        </Link>
                     </li>
                 </ul>
                 {role === 1 ? (
@@ -37,18 +44,28 @@ function DashboardSidebar(props: DashboardSidebarProps) {
                         <SidebarTitle title="QUẢN LÝ" />
                         <ul className="dashboardSidebar-body-list">
                             <li>
-                                <Link to="#">Thống kê</Link>
+                                <Link to="#">
+                                    <SidebarIcon type="bi-graph-up-arrow" />
+                                    Thống kê
+                                </Link>
                             </li>
                             <li>
-                                <i className="bi-alarm"></i>
-                                <Link to="#">Người dùng</Link>
+                                <Link to="#">
+                                    <SidebarIcon type="bi-people" />
+                                    Người dùng
+                                </Link>
                             </li>
                             <li>
-                                <i className="bi-alarm"></i>
-                                <Link to="#">Nhân viên</Link>
+                                <Link to="#">
+                                    <SidebarIcon type="bi-person-badge" />
+                                    Nhân viên
+                                </Link>
                             </li>
                             <li>
-                                <Link to="#">Địa chỉ</Link>
+                                <Link to="#">
+                                    <SidebarIcon type="bi-geo-alt" />
+                                    Địa chỉ
+                                </Link>
                             </li>
                         </ul>
                     </>
@@ -57,11 +74,24 @@ function DashboardSidebar(props: DashboardSidebarProps) {
                         <SidebarTitle title="QUẢN LÝ" />
                         <ul className="dashboardSidebar-body-list">
                             <li>
-                                <Link to="#">Thống kê</Link>
+                                <Link to="#">
+                                    <SidebarIcon type="bi-graph-up-arrow" />
+                                    Thống kê
+                                </Link>
                             </li>
                         </ul>
                     </>
                 )}
+                <div className="d-flex align-items-center flex-column mt-auto">
+                    <button
+                        className="btn btn-danger mb-3 rounded-pill"
+                        data-bs-toggle="modal"
+                        data-bs-target="#logoutConfirm"
+                    >
+                        Đăng xuất
+                    </button>
+                    <span className="text-center fw-bold">PTSHIP 1.0.1</span>
+                </div>
             </div>
         </div>
     );
