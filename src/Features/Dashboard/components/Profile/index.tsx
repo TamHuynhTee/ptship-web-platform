@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import './style.scss';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useFormState } from 'react-hook-form';
 import { ContentWrapper } from '../../../../components';
 import { EditSchema } from '../../../../validates';
 import { FormTitle } from '../../../Home/components';
@@ -9,10 +9,12 @@ import defaultAvatar from '../../../../images/Logo128.png';
 import Select from 'react-select';
 import addressApi from '../../../../apis/Apis/addressApi';
 import { ColorLabel } from '../../../../components/PinkLabel';
-import Avatar from 'react-avatar-edit';
 import { IUpdateUserBody } from '../../../../apis/body/authBody';
 import authApi from '../../../../apis/Apis/authApi';
-import { notifyError } from '../../../../utils/notify';
+import { notifyError, notifySuccess } from '../../../../utils/notify';
+import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
+import storage from '../../../../firebase';
+import { DEFAULT_AVATAR } from '../../../../static/DefaultAvatar';
 
 interface ProfileProps {
     displayName?: string;
@@ -25,11 +27,12 @@ interface ProfileProps {
 export const Profile = (props: ProfileProps) => {
     const { displayName, phone, avatar, address, code } = props;
     const [options, setOptions] = React.useState([]);
+    const [editAvatar, setEditAvatar] = React.useState(false);
     const avatarInput = React.useRef<any>(null);
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, isDirty },
         control,
         reset,
     } = useForm({
@@ -42,7 +45,6 @@ export const Profile = (props: ProfileProps) => {
             avatar: avatar,
         },
     });
-
     React.useEffect(() => {
         const getAddress = async () => {
             const res: any = await addressApi.getAllAddress();
@@ -71,8 +73,9 @@ export const Profile = (props: ProfileProps) => {
         if (!validImageTypes.includes(avatarInput.current.files[0].type)) {
             notifyError('File không phải hình ảnh');
         } else if (avatarInput.current.files && avatarInput.current.files[0]) {
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function (e: any) {
+                setEditAvatar(true);
                 document
                     .getElementById('user-avatar')!
                     .setAttribute('src', e.target.result);
@@ -81,29 +84,92 @@ export const Profile = (props: ProfileProps) => {
         }
     };
 
+    const uploadAvatar = () => {
+        const storageRef = ref(
+            storage,
+            'images/' + avatarInput.current.files[0].name
+        );
+        const uploadTask = uploadBytesResumable(
+            storageRef,
+            avatarInput.current.files[0]
+        );
+        uploadTask.on(
+            'state_changed',
+            (snapshot: any) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            },
+            (error: any) => {
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        console.log(
+                            "User doesn't have permission to access the object"
+                        );
+                        break;
+                    case 'storage/canceled':
+                        console.log('User canceled the upload');
+                        break;
+
+                    case 'storage/unknown':
+                        console.log(
+                            'Unknown error occurred, inspect error.serverResponse'
+                        );
+                        break;
+                }
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(
+                    (downloadURL: string) => {
+                        setTimeout(async () => {
+                            const body: IUpdateUserBody = {
+                                displayName: displayName,
+                                phone: phone,
+                                address: address,
+                                avatar: downloadURL,
+                                code: code,
+                            };
+                            const res: any = await authApi.updateUser(body);
+                            if (res.data) {
+                                notifySuccess(
+                                    'Cập nhật ảnh đại diện thành công'
+                                );
+                                setEditAvatar(false);
+                            } else {
+                                notifyError('Cập nhật ảnh đại diện thất bại');
+                            }
+                        }, 1000);
+                    }
+                );
+            }
+        );
+    };
+
     const onSubmit = (data: any, e: any) => {
         e.preventDefault();
-        console.log(data);
-        // return new Promise((resolve) => {
-        //     setTimeout(async () => {
-        //         const body: IUpdateUserBody = {
-        //             displayName: data.displayName,
-        //             phone: data.phone,
-        //             address: data.address,
-        //             avatar: data.avatar,
-        //             code: data.code,
-        //         };
-        //         const res: any = await authApi.updateUser(body);
-        //         console.log(res);
-        //         resolve(true);
-        //     }, 2000);
-        // });
+        return new Promise((resolve) => {
+            setTimeout(async () => {
+                const body: IUpdateUserBody = {
+                    displayName: data.displayName,
+                    phone: data.phone,
+                    address: data.address,
+                    avatar: DEFAULT_AVATAR,
+                    code: data.code,
+                };
+                const res: any = await authApi.updateUser(body);
+                if (res.data) {
+                    notifySuccess('Cập nhật thành công');
+                } else {
+                    notifyError('Cập nhật thất bại');
+                }
+                resolve(true);
+            }, 2000);
+        });
     };
 
     return (
         <ContentWrapper>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormTitle title="THÔNG TIN CÁ NHÂN" />
+                <FormTitle title="THÔNG TIN CÁ NHÂN" center />
                 <div className="d-flex profile">
                     <div className="profile-avatar d-flex flex-column align-items-center p-2">
                         <div className="avatar-container mb-3">
@@ -114,9 +180,10 @@ export const Profile = (props: ProfileProps) => {
                             <input
                                 type="file"
                                 id="file"
+                                accept=".jpg,.png,.jpeg"
                                 ref={avatarInput}
                                 onChange={showNewAvatar}
-                                style={{ display: 'none' }}
+                                hidden
                             />
                         </div>
                         <button
@@ -124,9 +191,26 @@ export const Profile = (props: ProfileProps) => {
                             className="btn btn-primary mb-3"
                             onClick={onAvatarClick}
                         >
-                            Đổi ảnh đại diện
+                            Chọn ảnh đại diện
                         </button>
-                        <p>* Sau khi đổi nhớ bấm lưu để cập nhật</p>
+                        {editAvatar && (
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={uploadAvatar}
+                            >
+                                {!isSubmitting ? (
+                                    'Lưu ảnh'
+                                ) : (
+                                    <span
+                                        className="spinner-border spinner-border-sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    ></span>
+                                )}
+                            </button>
+                        )}
+                        <p>* Nên chọn ảnh vuông để hiển thị tốt hơn</p>
                     </div>
                     <div className="profile-info p-2">
                         <div className="form-group mb-2">
@@ -195,7 +279,11 @@ export const Profile = (props: ProfileProps) => {
                                 {errors.code?.message}
                             </p>
                         </div>
-                        <button type="submit" className="btn btn-success me-3">
+                        <button
+                            type="submit"
+                            className="btn btn-success me-3"
+                            disabled={!isDirty}
+                        >
                             {!isSubmitting ? (
                                 'Lưu thông tin'
                             ) : (
@@ -210,6 +298,7 @@ export const Profile = (props: ProfileProps) => {
                             type="button"
                             className="btn btn-primary"
                             onClick={() => reset()}
+                            disabled={!isDirty}
                         >
                             <i className="bi bi-arrow-repeat"></i> Reset
                         </button>
