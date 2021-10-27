@@ -14,7 +14,6 @@ function App() {
     const [authenticated, setAuthenticated] = React.useState(false);
 
     React.useEffect(() => {
-        // const remembered = localStorage.getItem('remembered');
         const loggedIn = Boolean(localStorage.getItem('token'));
         setAuthenticated(loggedIn);
     }, [authenticated]);

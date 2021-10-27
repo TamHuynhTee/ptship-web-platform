@@ -12,6 +12,7 @@ import { ColorLabel } from '../../../../components/PinkLabel';
 import Avatar from 'react-avatar-edit';
 import { IUpdateUserBody } from '../../../../apis/body/authBody';
 import authApi from '../../../../apis/Apis/authApi';
+import { notifyError } from '../../../../utils/notify';
 
 interface ProfileProps {
     displayName?: string;
@@ -24,9 +25,7 @@ interface ProfileProps {
 export const Profile = (props: ProfileProps) => {
     const { displayName, phone, avatar, address, code } = props;
     const [options, setOptions] = React.useState([]);
-    const [editAvatar, setEditAvatar] = React.useState(false);
-    const [preview, setPreview] = React.useState(null);
-    const refAvatar = React.useRef(null);
+    const avatarInput = React.useRef<any>(null);
     const {
         register,
         handleSubmit,
@@ -58,24 +57,28 @@ export const Profile = (props: ProfileProps) => {
         getAddress();
     }, []);
 
-    const onCrop = (newPreview: any) => {
-        setPreview(newPreview);
+    const onAvatarClick = () => {
+        avatarInput.current.click();
     };
 
-    const onClose = () => {
-        setPreview(null);
-    };
-
-    const onBeforeFileLoad = (elem: any) => {
-        if (elem.target.files[0].size > 71680) {
-            alert('Ảnh quá lớn!');
-            elem.target.value = '';
+    const showNewAvatar = async () => {
+        const validImageTypes = [
+            'image/jpg',
+            'image/jpeg',
+            'image/png',
+            'image/svg',
+        ];
+        if (!validImageTypes.includes(avatarInput.current.files[0].type)) {
+            notifyError('File không phải hình ảnh');
+        } else if (avatarInput.current.files && avatarInput.current.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e: any) {
+                document
+                    .getElementById('user-avatar')!
+                    .setAttribute('src', e.target.result);
+            };
+            reader.readAsDataURL(avatarInput.current.files[0]);
         }
-    };
-
-    const openEditAvatar = () => {
-        setEditAvatar(!editAvatar);
-        setPreview(null);
     };
 
     const onSubmit = (data: any, e: any) => {
@@ -88,7 +91,7 @@ export const Profile = (props: ProfileProps) => {
         //             phone: data.phone,
         //             address: data.address,
         //             avatar: data.avatar,
-        //             code: data.code.value,
+        //             code: data.code,
         //         };
         //         const res: any = await authApi.updateUser(body);
         //         console.log(res);
@@ -104,33 +107,26 @@ export const Profile = (props: ProfileProps) => {
                 <div className="d-flex profile">
                     <div className="profile-avatar d-flex flex-column align-items-center p-2">
                         <div className="avatar-container mb-3">
-                            {preview ? (
-                                <img src={preview} alt="Preview" />
-                            ) : (
-                                <img src={avatar || defaultAvatar} />
-                            )}
+                            <img
+                                src={avatar || defaultAvatar}
+                                id="user-avatar"
+                            />
+                            <input
+                                type="file"
+                                id="file"
+                                ref={avatarInput}
+                                onChange={showNewAvatar}
+                                style={{ display: 'none' }}
+                            />
                         </div>
                         <button
                             type="button"
-                            className={`btn btn-${
-                                !editAvatar ? 'primary' : 'secondary'
-                            } ${editAvatar && ' mb-3'}`}
-                            onClick={openEditAvatar}
+                            className="btn btn-primary mb-3"
+                            onClick={onAvatarClick}
                         >
-                            {editAvatar ? 'Hủy' : 'Đổi ảnh đại diện'}
+                            Đổi ảnh đại diện
                         </button>
-                        {editAvatar && (
-                            <Avatar
-                                // {...register('avatar')}
-                                ref={refAvatar}
-                                width={390}
-                                height={295}
-                                onCrop={onCrop}
-                                onClose={onClose}
-                                onBeforeFileLoad={onBeforeFileLoad}
-                                src={avatar || defaultAvatar}
-                            />
-                        )}
+                        <p>* Sau khi đổi nhớ bấm lưu để cập nhật</p>
                     </div>
                     <div className="profile-info p-2">
                         <div className="form-group mb-2">

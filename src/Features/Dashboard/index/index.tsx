@@ -11,6 +11,7 @@ import { ChangePassForm } from '../components';
 import { Profile } from '../components/Profile';
 import { DashboardHome } from '../components/DashboardHome';
 import { LogoutConfirm } from '../components/LogoutConfirm';
+import { Addresses, Staffs, Users } from '../Admin/pages';
 
 interface Props {}
 
@@ -60,6 +61,10 @@ export const Dashboard = (props: Props) => {
                             path={`${path}/resetPass`}
                             component={ChangePassForm}
                         />
+                        {/* Admin routes */}
+                        <Route path={`${path}/user`} component={Users} />
+                        <Route path={`${path}/staff`} component={Staffs} />
+                        <Route path={`${path}/address`} component={Addresses} />
                     </Switch>
                 </DashboardScreen>
             </div>

@@ -15,12 +15,7 @@ export const LogoutConfirm = (props: LogoutConfirmProps) => {
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5
-                            className="modal-title fw-bold"
-                            id="exampleModalLabel"
-                        >
-                            Xác nhận thoát?
-                        </h5>
+                        <h5 className="modal-title fw-bold">Xác nhận thoát?</h5>
                     </div>
                     <div className="modal-body">
                         Bạn chắc muốn đăng xuất chứ ?

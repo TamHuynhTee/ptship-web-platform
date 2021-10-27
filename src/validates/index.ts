@@ -60,5 +60,10 @@ export const EditSchema = yup.object().shape({
             'Số điện thoại không hợp lệ'
         ),
     avatar: yup.string(),
-    // code: yup.string().nullable(),
+    code: yup.string(),
+});
+
+export const NewAddressSchema = yup.object().shape({
+    key: yup.string().required('Chưa chọn vùng'),
+    address: yup.string().required('Chưa nhập khu vực'),
 });

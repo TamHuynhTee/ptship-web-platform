@@ -50,19 +50,19 @@ function DashboardSidebar(props: DashboardSidebarProps) {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="#">
+                                <Link to={`${match.url}/user`}>
                                     <SidebarIcon type="bi-people" />
                                     Người dùng
                                 </Link>
                             </li>
                             <li>
-                                <Link to="#">
+                                <Link to={`${match.url}/staff`}>
                                     <SidebarIcon type="bi-person-badge" />
                                     Nhân viên
                                 </Link>
                             </li>
                             <li>
-                                <Link to="#">
+                                <Link to={`${match.url}/address`}>
                                     <SidebarIcon type="bi-geo-alt" />
                                     Địa chỉ
                                 </Link>

@@ -9,7 +9,7 @@
         padding-top: $header;
         height: 100%;
         position: relative;
-        // width: -webkit-fill-available;
+        overflow: auto;
         flex: 20;
     }
 }
