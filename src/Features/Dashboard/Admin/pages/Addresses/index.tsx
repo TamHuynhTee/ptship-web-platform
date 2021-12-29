@@ -2,14 +2,9 @@ import React from 'react';
 import addressApi from '../../../../../apis/Apis/addressApi';
 import { ContentWrapper } from '../../../../../components';
 import { FormTitle } from '../../../../Home/components';
-import { AddEditAddress } from '../../components';
+import { AddAddressModal } from '../../components';
 
-interface Props {}
-
-export const Addresses = (props: Props) => {
-    const [editMode, setEditMode] = React.useState(false);
-    const [editData, setEditData] = React.useState({});
-    const [haveModal, setHaveModal] = React.useState(false);
+export const Addresses = () => {
     const [address, setAddress] = React.useState([]);
 
     React.useEffect(() => {
@@ -25,27 +20,14 @@ export const Addresses = (props: Props) => {
         getAddress();
     }, []);
 
-    const handleAddMode = () => {
-        setEditMode(false);
-        setEditData({});
-        setHaveModal(true);
-    };
-
-    const handleEditMode = (data: any) => {
-        setHaveModal(true);
-        setEditMode(true);
-        setEditData(data);
-    };
-
     return (
         <ContentWrapper>
             <div className="d-flex justify-content-between align-items-center">
-                <FormTitle title="QUẢN LÝ ĐỊA CHỈ" />
+                <FormTitle title="QUẢN LÝ ĐỊA CHỈ" bold />
                 <button
                     className="btn btn-success"
                     data-bs-toggle="modal"
                     data-bs-target="#createAddress"
-                    onClick={handleAddMode}
                 >
                     <i className="bi bi-plus-square"></i> | Thêm
                 </button>
@@ -61,12 +43,7 @@ export const Addresses = (props: Props) => {
                 </thead>
                 <tbody>
                     {address.map((e: any, i: number) => (
-                        <tr
-                            key={i}
-                            onClick={() => handleEditMode(e)}
-                            data-bs-toggle="modal"
-                            data-bs-target="#createAddress"
-                        >
+                        <tr key={i}>
                             <th scope="row">{i + 1}</th>
                             <td>{e.address}</td>
                             <td>
@@ -76,11 +53,7 @@ export const Addresses = (props: Props) => {
                     ))}
                 </tbody>
             </table>
-            {haveModal ? (
-                <AddEditAddress isEdit={editMode} data={editData} />
-            ) : (
-                ''
-            )}
+            <AddAddressModal />
         </ContentWrapper>
     );
 };

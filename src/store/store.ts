@@ -5,8 +5,11 @@ import {
     Action,
 } from '@reduxjs/toolkit';
 import thunk, { ThunkAction } from 'redux-thunk';
+import adminSlice from '../Features/Dashboard/Admin/slice';
 
-const reducer = {};
+const reducer = {
+    admin: adminSlice,
+};
 
 export type IRootState = StateFromReducersMapObject<typeof reducer>;
 

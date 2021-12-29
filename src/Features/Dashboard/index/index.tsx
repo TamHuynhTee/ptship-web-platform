@@ -13,9 +13,7 @@ import { DashboardHome } from '../components/DashboardHome';
 import { LogoutConfirm } from '../components/LogoutConfirm';
 import { Addresses, Staffs, Users } from '../Admin/pages';
 
-interface Props {}
-
-export const Dashboard = (props: Props) => {
+export const Dashboard = () => {
     const { path } = useRouteMatch();
     const [data, setData] = React.useState<any>({});
     const history = useHistory();
@@ -30,7 +28,6 @@ export const Dashboard = (props: Props) => {
     React.useEffect(() => {
         const getUser = async () => {
             const response: any = await authApi.getUser();
-            console.log(response);
             setData(response.data);
         };
         getUser();
