@@ -1,3 +1,3 @@
 export interface AuthStateTypes {
-    loading?: boolean;
+  loading?: boolean;
 }
