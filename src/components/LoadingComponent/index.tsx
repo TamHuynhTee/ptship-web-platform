@@ -1,5 +1,5 @@
 import React from 'react';
-import { BeatLoader } from 'react-spinners';
+import { PropagateLoader } from 'react-spinners';
 
 export const LoadingComponent = () => {
     return (
@@ -7,7 +7,7 @@ export const LoadingComponent = () => {
             className="d-flex justify-content-center align-items-center"
             style={{ height: '300px' }}
         >
-            <BeatLoader size={30} color={'#3fa3db'} />
+            <PropagateLoader size={30} color={'#fdb7c0'} />
         </div>
     );
 };

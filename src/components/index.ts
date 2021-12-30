@@ -4,3 +4,5 @@ export * from './PrivateRoute';
 export * from './ContentWrapper';
 export * from './LoadingComponent';
 export * from './PinkLabel';
+export * from './CustomModal';
+export * from './ButtonSpinner';

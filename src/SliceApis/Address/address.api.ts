@@ -22,9 +22,3 @@ export const updateAddressApi = async (
 ): Promise<ReturnResponse<any>> => {
     return await Repository(routeAddress['updateAddress'], payload);
 };
-
-export const deleteAddressApi = async (
-    payload: IDeleteAddressApi
-): Promise<ReturnResponse<any>> => {
-    return await Repository(routeAddress['deleteAddress'], payload);
-};

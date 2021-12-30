@@ -11,7 +11,11 @@ const initialState: AddressStateTypes = {
 export const addressSlice = createSlice({
     name: 'address',
     initialState,
-    reducers: {},
+    reducers: {
+        getAddressDetail: (state, action: PayloadAction<any>) => {
+            state.addressDetail = action.payload;
+        },
+    },
     extraReducers: {
         [getAllAddressAsync.pending.toString()]: (state) => {
             state.loading = true;
@@ -28,7 +32,7 @@ export const addressSlice = createSlice({
         },
     },
 });
-export const {} = addressSlice.actions;
+export const { getAddressDetail } = addressSlice.actions;
 
 export default addressSlice.reducer;
 // getDeadlineStudentAsync
