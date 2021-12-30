@@ -1,23 +1,18 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import addressApi from '../../../../../apis/Apis/addressApi';
 import { ContentWrapper } from '../../../../../components';
+import { selectAddressList } from '../../../../../Slice/Address/selector';
+import { getAllAddressAsync } from '../../../../../Slice/Address/thunk';
 import { FormTitle } from '../../../../Home/components';
 import { AddAddressModal } from '../../components';
 
 export const Addresses = () => {
-    const [address, setAddress] = React.useState([]);
-
+    const dispatch = useDispatch();
+    const addresses = useSelector(selectAddressList);
     React.useEffect(() => {
-        const getAddress = async () => {
-            const res: any = await addressApi.getAllAddress();
-            const newAddress = res.data.map((e: any) => ({
-                id: e._id,
-                zone: e.key,
-                address: e.address,
-            }));
-            setAddress(newAddress);
-        };
-        getAddress();
+        dispatch(getAllAddressAsync());
     }, []);
 
     return (
@@ -39,15 +34,21 @@ export const Addresses = () => {
                         <th scope="col">#</th>
                         <th scope="col">Khu vực</th>
                         <th scope="col">Vùng</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {address.map((e: any, i: number) => (
+                    {addresses?.map((e: any, i: number) => (
                         <tr key={i}>
                             <th scope="row">{i + 1}</th>
                             <td>{e.address}</td>
                             <td>
                                 {e.zone === 'PTN' ? 'Nội thành' : 'Ngoại thành'}
+                            </td>
+                            <td>
+                                <Link to={`/dashboard/address/${e._id}`}>
+                                    Chi tiết
+                                </Link>
                             </td>
                         </tr>
                     ))}

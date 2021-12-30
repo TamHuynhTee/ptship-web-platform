@@ -11,7 +11,7 @@ import { ChangePassForm } from '../components';
 import { Profile } from '../components/Profile';
 import { DashboardHome } from '../components/DashboardHome';
 import { LogoutConfirm } from '../components/LogoutConfirm';
-import { Addresses, Staffs, Users } from '../Admin/pages';
+import { AddressDetail, Addresses, Staffs, Users } from '../Admin/pages';
 
 export const Dashboard = () => {
     const { path } = useRouteMatch();
@@ -62,6 +62,11 @@ export const Dashboard = () => {
                         <Route path={`${path}/user`} component={Users} />
                         <Route path={`${path}/staff`} component={Staffs} />
                         <Route path={`${path}/address`} component={Addresses} />
+                        <Route
+                            exact
+                            path={`${path}/address/:id`}
+                            component={AddressDetail}
+                        />
                     </Switch>
                 </DashboardScreen>
             </div>

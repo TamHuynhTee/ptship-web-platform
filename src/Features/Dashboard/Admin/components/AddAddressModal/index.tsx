@@ -2,9 +2,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
-import addressApi from '../../../../../apis/Apis/addressApi';
 import { ICreateAddressBody } from '../../../../../apis/body/addressBody';
 import { ColorLabel } from '../../../../../components/PinkLabel';
+import { createNewAddressApi } from '../../../../../SliceApis/Address/address.api';
 import { notifyError, notifySuccess } from '../../../../../utils/notify';
 import { NewAddressSchema } from '../../../../../validates';
 
@@ -31,7 +31,7 @@ export const AddAddressModal = () => {
                     address: data.address,
                     key: data.key,
                 };
-                const res: any = await addressApi.createAddress(body);
+                const res: any = await createNewAddressApi(body);
                 console.log(res);
                 if (res.data) {
                     reset();

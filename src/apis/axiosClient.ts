@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import queryString from 'query-string';
 const axiosClient = axios.create({
-    baseURL: 'http://45.76.148.139:3005',
+    baseURL: 'http://18.139.217.68:3005',
     timeout: 20000,
     headers: {
         'Content-Type': 'application/json',

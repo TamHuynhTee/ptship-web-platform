@@ -5,10 +5,10 @@ import {
     Action,
 } from '@reduxjs/toolkit';
 import thunk, { ThunkAction } from 'redux-thunk';
-import adminSlice from '../Features/Dashboard/Admin/slice';
+import addressSlice from '../Slice/Address';
 
 const reducer = {
-    admin: adminSlice,
+    address: addressSlice,
 };
 
 export type IRootState = StateFromReducersMapObject<typeof reducer>;
