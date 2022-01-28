@@ -1,5 +1,7 @@
+import { staffModel } from '../../Models/staff.model';
+
 export interface StaffStateTypes {
-  status?: string;
-  staff?: any;
-  allStaff?: any;
+    loading?: boolean;
+    staff?: staffModel;
+    allStaff?: Array<staffModel>;
 }

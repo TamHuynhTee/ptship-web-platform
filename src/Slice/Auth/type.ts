@@ -1,3 +1,6 @@
+import { currentUserModel } from '../../Models/auth.model';
+
 export interface AuthStateTypes {
-  loading?: boolean;
+    loading?: boolean;
+    currentUser?: currentUserModel;
 }

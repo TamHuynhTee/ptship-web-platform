@@ -1,7 +1,9 @@
+import { addressModel } from '../../Models/address.model';
+
 export interface AddressStateTypes {
     loading?: boolean;
-    addressList?: Array<any>;
-    addressDetail?: any;
+    addressList?: Array<addressModel>;
+    addressDetail?: addressModel;
 }
 
 export interface ICreateAddressBody {

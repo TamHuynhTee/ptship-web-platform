@@ -6,3 +6,4 @@ export * from './LoadingComponent';
 export * from './PinkLabel';
 export * from './CustomModal';
 export * from './ButtonSpinner';
+export * from './InputMoney';

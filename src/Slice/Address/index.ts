@@ -4,7 +4,7 @@ import { AddressStateTypes } from './type';
 
 const initialState: AddressStateTypes = {
     loading: false,
-    addressDetail: null,
+    addressDetail: undefined,
     addressList: [],
 };
 
@@ -35,4 +35,3 @@ export const addressSlice = createSlice({
 export const { getAddressDetail } = addressSlice.actions;
 
 export default addressSlice.reducer;
-// getDeadlineStudentAsync

@@ -1,5 +1,6 @@
 import Repository from '../../apis/RepositoryApi';
 import { ReturnResponse } from '../../apis/Response';
+import { addressModel } from '../../Models/address.model';
 import {
     ICreateAddressBody,
     IDeleteAddressApi,
@@ -7,7 +8,9 @@ import {
 } from '../../Slice/Address/type';
 import { routeAddress } from './route.api';
 
-export const getAllAddressApi = async (): Promise<ReturnResponse<any>> => {
+export const getAllAddressApi = async (): Promise<
+    ReturnResponse<addressModel>
+> => {
     return await Repository(routeAddress['getAllAddress']);
 };
 

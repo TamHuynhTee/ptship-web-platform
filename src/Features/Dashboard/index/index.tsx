@@ -6,18 +6,21 @@ import DashboardScreen from '../components/DashboardMainScreen';
 import DashboardSidebar from '../components/DashboardSidebar';
 import { useHistory } from 'react-router';
 import './style.scss';
-import { notifySuccess } from '../../../utils/notify';
+import { notifyError, notifySuccess } from '../../../utils/notify';
 import { ChangePassForm } from '../components';
 import { Profile } from '../components/Profile';
 import { DashboardHome } from '../components/DashboardHome';
 import { LogoutConfirm } from '../components/LogoutConfirm';
 import { Addresses, Staffs, Users } from '../Admin/pages';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../../Slice/Auth/selector';
+import { getCurrentUserAsync } from '../../../Slice/Auth/thunk';
 
 export const Dashboard = () => {
     const { path } = useRouteMatch();
-    const [data, setData] = React.useState<any>({});
     const history = useHistory();
-
+    const dispatch = useDispatch();
+    const user = useSelector(selectCurrentUser);
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
@@ -26,32 +29,35 @@ export const Dashboard = () => {
     };
 
     React.useEffect(() => {
-        const getUser = async () => {
-            const response: any = await authApi.getUser();
-            setData(response.data);
-        };
-        getUser();
+        if (!localStorage.getItem('token')) {
+            history.push('/');
+            notifyError('Vui lòng đăng nhập');
+        }
+    }, []);
+
+    React.useEffect(() => {
+        dispatch(getCurrentUserAsync());
     }, []);
 
     return (
         <div className="dashboard">
-            <DashboardSidebar role={data.role}></DashboardSidebar>
+            <DashboardSidebar role={user?.role}></DashboardSidebar>
             <div className="dashboard-content">
                 <DashboardHeader
-                    name={data.displayName}
-                    avatar={data.avatar}
-                    phone={data.phone}
+                    name={user?.displayName}
+                    avatar={user?.avatar}
+                    phone={user?.phone}
                 ></DashboardHeader>
                 <DashboardScreen>
                     <Switch>
                         <Route exact path={path} component={DashboardHome} />
                         <Route path={`${path}/profile`}>
                             <Profile
-                                displayName={data.displayName}
-                                phone={data.phone}
-                                address={data.address}
-                                avatar={data.avatar}
-                                code={data.area?.code}
+                                displayName={user?.displayName}
+                                phone={user?.phone}
+                                address={user?.address}
+                                avatar={user?.avatar}
+                                code={user?.area?.code}
                             />
                         </Route>
                         <Route

@@ -1,5 +1,5 @@
 export interface UserStateTypes {
-  status?: string;
-  user?: any;
-  allUser?: any;
+    loading?: boolean;
+    user?: any;
+    allUser?: Array<any>;
 }

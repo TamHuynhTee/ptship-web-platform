@@ -1,2 +1,2 @@
 export * from './AddAddressModal';
-export * from './RegisterStaff';
+export * from './RegisterStaffModal';

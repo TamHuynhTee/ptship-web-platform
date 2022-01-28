@@ -67,3 +67,22 @@ export const NewAddressSchema = yup.object().shape({
     key: yup.string().required('Chưa chọn vùng'),
     address: yup.string().required('Chưa nhập khu vực'),
 });
+
+export const NewStaffSchema = yup.object().shape({
+    phone: yup.string().required('Chưa nhập số điện thoại'),
+    password: yup.string().required('Chưa nhập mật khẩu'),
+    confirmPassword: yup
+        .string()
+        .required('Chưa xác nhận mật khẩu')
+        .oneOf([yup.ref('password'), null], 'Mật khẩu phải giống nhau'),
+    displayName: yup.string().required('Chưa nhập tên'),
+    priceShipPTN: yup.string().required('Chưa nhập giá ship giao nội thành'),
+    priceShipPTH: yup.string().required('Chưa nhập giá ship giao ngoại thành'),
+    priceShipReceived: yup.string().required('Chưa nhập giá ship nhận'),
+});
+
+export const EditStaffSchema = yup.object().shape({
+    priceShipPTN: yup.string().required('Chưa nhập giá ship giao nội thành'),
+    priceShipPTH: yup.string().required('Chưa nhập giá ship giao ngoại thành'),
+    priceShipReceived: yup.string().required('Chưa nhập giá ship nhận'),
+});

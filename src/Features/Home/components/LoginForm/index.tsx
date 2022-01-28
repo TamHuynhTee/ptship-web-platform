@@ -28,7 +28,7 @@ function LoginForm(props: LoginFormProps) {
     };
 
     const handleShowPass = (e: any) => {
-        const type = e.target.checked ? 'password' : 'text';
+        const type = !e.target.checked ? 'password' : 'text';
         document.getElementById('password')?.setAttribute('type', type);
     };
 
@@ -97,12 +97,12 @@ function LoginForm(props: LoginFormProps) {
                         Hiện mật khẩu
                     </label>
                 </div>
-                <div className="checkbox">
+                {/* <div className="checkbox">
                     <label>
                         <input type="checkbox" {...register('remembered')} />{' '}
                         Duy trì đăng nhập
                     </label>
-                </div>
+                </div> */}
                 <div className="d-grid gap-2 mb-2">
                     <button
                         id="login-btn"

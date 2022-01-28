@@ -16,6 +16,7 @@ import { FormTitle } from '../../../../Home/components';
 import { AddAddressModal } from '../../components';
 import { AddressDetailModal } from '../../components/AddressDetailModal';
 import { ConfirmDeleteAddress } from '../../components/ConfirmDeleteAddress';
+import { AnimatePresence } from 'framer-motion';
 
 export const Addresses = () => {
     const dispatch = useDispatch();
@@ -24,11 +25,12 @@ export const Addresses = () => {
     React.useEffect(() => {
         dispatch(getAllAddressAsync());
     }, []);
-    const [show, setShow] = React.useState(false);
+    const [showAddModal, setShowAddModal] = React.useState(false);
+    const [showDetailModal, setShowDetailModal] = React.useState(false);
     const [showDelete, setShowDelete] = React.useState(false);
 
     const handleEditAddress = (address: any) => {
-        setShow(true);
+        setShowDetailModal(true);
         dispatch(getAddressDetail(address));
     };
     const handleDeleteAddress = (address: any) => {
@@ -42,8 +44,7 @@ export const Addresses = () => {
                 <FormTitle title="QUẢN LÝ ĐỊA CHỈ" bold />
                 <button
                     className="btn btn-success"
-                    data-bs-toggle="modal"
-                    data-bs-target="#createAddress"
+                    onClick={() => setShowAddModal(true)}
                 >
                     <i className="bi bi-plus-square"></i> | Thêm
                 </button>
@@ -99,13 +100,25 @@ export const Addresses = () => {
                     </table>
                 </>
             )}
-            <AddAddressModal />
-            {show ? <AddressDetailModal onClose={() => setShow(false)} /> : ''}
-            {showDelete ? (
-                <ConfirmDeleteAddress onClose={() => setShowDelete(false)} />
-            ) : (
-                ''
-            )}
+            <AnimatePresence initial={false} exitBeforeEnter={true}>
+                {showAddModal && (
+                    <AddAddressModal onClose={() => setShowAddModal(false)} />
+                )}
+            </AnimatePresence>
+            <AnimatePresence initial={false} exitBeforeEnter={true}>
+                {showDetailModal && (
+                    <AddressDetailModal
+                        onClose={() => setShowDetailModal(false)}
+                    />
+                )}
+            </AnimatePresence>
+            <AnimatePresence initial={false} exitBeforeEnter={true}>
+                {showDelete && (
+                    <ConfirmDeleteAddress
+                        onClose={() => setShowDelete(false)}
+                    />
+                )}
+            </AnimatePresence>
         </ContentWrapper>
     );
 };

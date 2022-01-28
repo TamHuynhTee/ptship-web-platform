@@ -1,14 +1,23 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { ICreateAddressBody } from '../../../../../apis/body/addressBody';
+import {
+    ButtonSpinner,
+    CustomModal,
+    ModalProps,
+} from '../../../../../components';
 import { ColorLabel } from '../../../../../components/PinkLabel';
+import { getAllAddressAsync } from '../../../../../Slice/Address/thunk';
 import { createNewAddressApi } from '../../../../../SliceApis/Address/address.api';
 import { notifyError, notifySuccess } from '../../../../../utils/notify';
 import { NewAddressSchema } from '../../../../../validates';
 
-export const AddAddressModal = () => {
+export const AddAddressModal = (props: ModalProps) => {
+    const { onClose } = props;
+    const dispatch = useDispatch();
     const options = [
         { value: 'PTN', label: 'Nội thành' },
         { value: 'PTH', label: 'Ngoại thành' },
@@ -17,7 +26,6 @@ export const AddAddressModal = () => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        reset,
         control,
     } = useForm({
         resolver: yupResolver(NewAddressSchema),
@@ -32,10 +40,10 @@ export const AddAddressModal = () => {
                     key: data.key,
                 };
                 const res: any = await createNewAddressApi(body);
-                console.log(res);
                 if (res.data) {
-                    reset();
+                    dispatch(getAllAddressAsync());
                     notifySuccess('Đã tạo địa chỉ mới');
+                    onClose();
                 } else {
                     notifyError('Có lỗi xảy ra, có thể địa chỉ này đã tồn tại');
                 }
@@ -45,94 +53,45 @@ export const AddAddressModal = () => {
     };
 
     return (
-        <div
-            className="modal fade"
-            id="createAddress"
-            tabIndex={-1}
-            aria-hidden="true"
-        >
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title fw-bold">
-                            Thêm mới địa chỉ
-                        </h5>
-                    </div>
-                    <div className="modal-body">
-                        <form>
-                            <div className="form-group mb-2">
-                                <ColorLabel title="Khu vực" for="address" />
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    {...register('address')}
-                                    id="address"
-                                    placeholder="Khu vực"
-                                />
-                                <p className="text-danger">
-                                    {errors.address?.message}
-                                </p>
-                            </div>
-                            <div className="form-group mb-2">
-                                <ColorLabel title="Vùng" for="key" />
-                                <Controller
-                                    control={control}
-                                    name="key"
-                                    render={({
-                                        field: {
-                                            onChange,
-                                            onBlur,
-                                            value,
-                                            name,
-                                        },
-                                    }) => (
-                                        <Select
-                                            name={name}
-                                            id="key"
-                                            options={options}
-                                            value={options?.find(
-                                                (option: any) =>
-                                                    option.value === value
-                                            )}
-                                            onChange={(val: any) =>
-                                                onChange(val.value)
-                                            }
-                                            onBlur={onBlur}
-                                        />
-                                    )}
-                                />
-                                <p className="text-danger">
-                                    {errors.key?.message}
-                                </p>
-                            </div>
-                        </form>
-                    </div>
-                    <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Hủy
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={handleSubmit(onSubmit)}
-                        >
-                            {!isSubmitting ? (
-                                'Tạo'
-                            ) : (
-                                <span
-                                    className="spinner-border spinner-border-sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                ></span>
-                            )}
-                        </button>
-                    </div>
+        <CustomModal onClose={onClose} title="Tạo địa chỉ mới">
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="form-group mb-2">
+                    <ColorLabel title="Khu vực" for="address" />
+                    <input
+                        type="text"
+                        className="form-control"
+                        {...register('address')}
+                        id="address"
+                        placeholder="Khu vực"
+                    />
+                    <p className="text-danger">{errors.address?.message}</p>
                 </div>
-            </div>
-        </div>
+                <div className="form-group mb-2">
+                    <ColorLabel title="Vùng" for="key" />
+                    <Controller
+                        control={control}
+                        name="key"
+                        render={({
+                            field: { onChange, onBlur, value, name },
+                        }) => (
+                            <Select
+                                name={name}
+                                id="key"
+                                options={options}
+                                value={options?.find(
+                                    (option: any) => option.value === value
+                                )}
+                                onChange={(val: any) => onChange(val.value)}
+                                onBlur={onBlur}
+                            />
+                        )}
+                    />
+                    <p className="text-danger">{errors.key?.message}</p>
+                </div>
+                <button className="btn btn-success">
+                    {isSubmitting ? <ButtonSpinner /> : 'Tạo'}
+                </button>
+            </form>
+        </CustomModal>
     );
 };

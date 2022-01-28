@@ -1,63 +1,68 @@
+import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
-import './style.scss';
-import { Controller, useForm, useFormState } from 'react-hook-form';
-import { ContentWrapper } from '../../../../components';
-import { EditSchema } from '../../../../validates';
-import { FormTitle } from '../../../Home/components';
-import defaultAvatar from '../../../../images/Logo128.png';
+import { Controller, useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import addressApi from '../../../../apis/Apis/addressApi';
-import { ColorLabel } from '../../../../components/PinkLabel';
-import { IUpdateUserBody } from '../../../../apis/body/authBody';
 import authApi from '../../../../apis/Apis/authApi';
-import { notifyError, notifySuccess } from '../../../../utils/notify';
-import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
+import { IUpdateUserBody } from '../../../../apis/body/authBody';
+import { ButtonSpinner, ContentWrapper } from '../../../../components';
+import { ColorLabel } from '../../../../components/PinkLabel';
 import storage from '../../../../firebase';
+import defaultAvatar from '../../../../images/Logo128.png';
+import { selectAddressList } from '../../../../Slice/Address/selector';
+import { getAllAddressAsync } from '../../../../Slice/Address/thunk';
 import { DEFAULT_AVATAR } from '../../../../static/DefaultAvatar';
+import { notifyError, notifySuccess } from '../../../../utils/notify';
+import { EditSchema } from '../../../../validates';
+import { FormTitle } from '../../../Home/components';
+import './style.scss';
 
 interface ProfileProps {
-    displayName?: string;
-    phone?: string;
-    avatar?: string;
-    address?: string;
-    code?: string;
+    displayName: string | undefined;
+    phone: string | undefined;
+    avatar: string | undefined;
+    address: string | undefined;
+    code: string | undefined;
 }
 
 export const Profile = (props: ProfileProps) => {
     const { displayName, phone, avatar, address, code } = props;
-    const [options, setOptions] = React.useState([]);
     const [editAvatar, setEditAvatar] = React.useState(false);
     const avatarInput = React.useRef<any>(null);
+    const dispatch = useDispatch();
+    const listAddress = useSelector(selectAddressList);
+
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting, isDirty },
         control,
-        reset,
+        setValue,
     } = useForm({
         resolver: yupResolver(EditSchema),
-        defaultValues: {
-            displayName: displayName,
-            phone: phone,
-            address: address,
-            code: code,
-            avatar: avatar,
-        },
     });
+
     React.useEffect(() => {
-        const getAddress = async () => {
-            const res: any = await addressApi.getAllAddress();
-            const newOptions = res.data.map((e: any) => ({
-                value: e.code,
-                label: `${e.address} (${
-                    e.key === 'PTN' ? 'Nội thành' : 'Ngoại thành'
-                })`,
-            }));
-            setOptions(newOptions);
-        };
-        getAddress();
+        setValue('displayName', displayName);
+        setValue('phone', phone);
+        setValue('avatar', avatar);
+        setValue('address', address);
+        setValue('code', code);
+    }, [setValue, displayName, phone, avatar, address, code]);
+
+    React.useEffect(() => {
+        dispatch(getAllAddressAsync());
     }, []);
+
+    const options =
+        listAddress?.map((e: any) => ({
+            value: e.code,
+            label: `${e.address} (${
+                e.key === 'PTN' ? 'Nội thành' : 'Ngoại thành'
+            })`,
+        })) || [];
 
     const onAvatarClick = () => {
         avatarInput.current.click();
@@ -96,26 +101,10 @@ export const Profile = (props: ProfileProps) => {
         uploadTask.on(
             'state_changed',
             (snapshot: any) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(snapshot);
             },
             (error: any) => {
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        console.log(
-                            "User doesn't have permission to access the object"
-                        );
-                        break;
-                    case 'storage/canceled':
-                        console.log('User canceled the upload');
-                        break;
-
-                    case 'storage/unknown':
-                        console.log(
-                            'Unknown error occurred, inspect error.serverResponse'
-                        );
-                        break;
-                }
+                console.log(error.code);
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then(
@@ -199,15 +188,7 @@ export const Profile = (props: ProfileProps) => {
                                 className="btn btn-success"
                                 onClick={uploadAvatar}
                             >
-                                {!isSubmitting ? (
-                                    'Lưu ảnh'
-                                ) : (
-                                    <span
-                                        className="spinner-border spinner-border-sm"
-                                        role="status"
-                                        aria-hidden="true"
-                                    ></span>
-                                )}
+                                {!isSubmitting ? 'Lưu ảnh' : <ButtonSpinner />}
                             </button>
                         )}
                         <p>* Nên chọn ảnh vuông để hiển thị tốt hơn</p>
@@ -264,7 +245,7 @@ export const Profile = (props: ProfileProps) => {
                                         name={name}
                                         id="code"
                                         options={options}
-                                        value={options?.find(
+                                        value={options.find(
                                             (option: any) =>
                                                 option.value === value
                                         )}
@@ -287,20 +268,8 @@ export const Profile = (props: ProfileProps) => {
                             {!isSubmitting ? (
                                 'Lưu thông tin'
                             ) : (
-                                <span
-                                    className="spinner-border spinner-border-sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                ></span>
+                                <ButtonSpinner />
                             )}
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => reset()}
-                            disabled={!isDirty}
-                        >
-                            <i className="bi bi-arrow-repeat"></i> Reset
                         </button>
                     </div>
                 </div>

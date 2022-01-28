@@ -3,7 +3,6 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import { ICreateAddressBody } from '../../../../../apis/body/addressBody';
 import {
     ButtonSpinner,
     CustomModal,
@@ -12,11 +11,7 @@ import {
 import { ColorLabel } from '../../../../../components/PinkLabel';
 import { selectAddressDetail } from '../../../../../Slice/Address/selector';
 import { getAllAddressAsync } from '../../../../../Slice/Address/thunk';
-import { IUpdateAddressBody } from '../../../../../Slice/Address/type';
-import {
-    createNewAddressApi,
-    updateAddressApi,
-} from '../../../../../SliceApis/Address/address.api';
+import { updateAddressApi } from '../../../../../SliceApis/Address/address.api';
 import { notifyError, notifySuccess } from '../../../../../utils/notify';
 import { NewAddressSchema } from '../../../../../validates';
 
@@ -28,12 +23,10 @@ export const AddressDetailModal = (props: ModalProps) => {
         { value: 'PTH', label: 'Ngoại thành' },
     ];
     const address = useSelector(selectAddressDetail);
-    console.log(address);
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        reset,
         control,
     } = useForm({
         resolver: yupResolver(NewAddressSchema),
@@ -47,12 +40,11 @@ export const AddressDetailModal = (props: ModalProps) => {
         e.preventDefault();
         return new Promise((resolve) => {
             setTimeout(async () => {
-                const body: IUpdateAddressBody = {
-                    id: address?._id,
+                const res: any = await updateAddressApi({
+                    id: address?._id || '',
                     address: data.address,
                     key: data.key,
-                };
-                const res: any = await updateAddressApi(body);
+                });
                 if (res.data) {
                     dispatch(getAllAddressAsync());
                     notifySuccess('Đã cập nhật địa chỉ');

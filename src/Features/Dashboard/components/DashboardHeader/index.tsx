@@ -3,6 +3,7 @@ import { DropdownMenu } from '../../../../components/DropdownMenu';
 import { ToggleSidebar } from '../ToggleSidebar';
 import defaultAvatar from '../../../../images/Logo128.png';
 import './style.scss';
+import { Link } from 'react-router-dom';
 
 interface DashboardHeaderProps {
     name?: string;
@@ -44,13 +45,16 @@ function DashboardHeader(props: DashboardHeaderProps) {
                     </button>
                     <DropdownMenu id="dropdown-user">
                         <li>
-                            <button className="dropdown-item">
+                            <Link
+                                to={'/dashboard/profile'}
+                                className="dropdown-item"
+                            >
                                 Thông tin cá nhân
-                            </button>
+                            </Link>
                         </li>
                         <li>
                             <button
-                                className="dropdown-item"
+                                className="dropdown-item text-danger"
                                 data-bs-toggle="modal"
                                 data-bs-target="#logoutConfirm"
                             >
