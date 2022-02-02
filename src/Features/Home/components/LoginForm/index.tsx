@@ -1,10 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import authApi from '../../../../apis/Apis/authApi';
-import { ILoginBody } from '../../../../apis/body/authBody';
-import { notifySuccess } from '../../../../utils/notify';
+import { ButtonSpinner } from '../../../../components';
+import { loginAsync } from '../../../../Slice/Auth/thunk';
 import { SignInSchema } from '../../../../validates';
 import { FormTitle } from '../FormTitle';
 import './style.scss';
@@ -14,13 +14,12 @@ interface LoginFormProps {
 }
 
 function LoginForm(props: LoginFormProps) {
-    const [error, setError] = useState('');
     const history = useHistory();
+    const dispatch = useDispatch();
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        reset,
     } = useForm({ resolver: yupResolver(SignInSchema) });
 
     const handleChangePage = (page: number) => {
@@ -36,24 +35,9 @@ function LoginForm(props: LoginFormProps) {
         e.preventDefault();
         return new Promise((resolve) => {
             setTimeout(async () => {
-                const body: ILoginBody = {
-                    phone: data.phone,
-                    password: data.password,
-                };
-                const response: any = await authApi.login(body);
-                if (Object.keys(response.data).length === 0) {
-                    setError(
-                        response.message === 'Invalid password !!'
-                            ? 'Sai mật khẩu'
-                            : 'Không tìm thấy số điện thoại'
-                    );
-                    resolve(true);
-                    return;
-                }
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('role', response.data.role);
-                history.push('/dashboard');
-                notifySuccess('Đăng nhập thành công');
+                const res: any = await dispatch(loginAsync(data));
+                if (Object.values(res.payload).length)
+                    history.push('/dashboard');
                 resolve(true);
             }, 2000);
         });
@@ -63,9 +47,6 @@ function LoginForm(props: LoginFormProps) {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="login-form">
                 <FormTitle title="ĐĂNG NHẬP" />
-                {error !== '' && (
-                    <div className="alert alert-danger">{error}</div>
-                )}
                 {/* input */}
                 <div className="form-group">
                     <input
@@ -97,27 +78,13 @@ function LoginForm(props: LoginFormProps) {
                         Hiện mật khẩu
                     </label>
                 </div>
-                {/* <div className="checkbox">
-                    <label>
-                        <input type="checkbox" {...register('remembered')} />{' '}
-                        Duy trì đăng nhập
-                    </label>
-                </div> */}
                 <div className="d-grid gap-2 mb-2">
                     <button
                         id="login-btn"
                         type="submit"
                         className="btn btn-success"
                     >
-                        {!isSubmitting ? (
-                            'ĐĂNG NHẬP'
-                        ) : (
-                            <span
-                                className="spinner-border spinner-border-sm"
-                                role="status"
-                                aria-hidden="true"
-                            ></span>
-                        )}
+                        {!isSubmitting ? 'ĐĂNG NHẬP' : <ButtonSpinner />}
                     </button>
                     <input
                         id="forgot-btn"

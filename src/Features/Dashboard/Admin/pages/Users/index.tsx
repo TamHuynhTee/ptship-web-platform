@@ -1,39 +1,45 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ContentWrapper } from '../../../../../components';
-import {
-    selectAllUser,
-    selectUserLoading,
-} from '../../../../../Slice/User/selector';
+import SearchInput from '../../../../../components/SearchInput';
+import { selectAllUser } from '../../../../../Slice/User/selector';
 import { getAllUserAsync } from '../../../../../Slice/User/thunk';
 import { DEFAULT_AVATAR } from '../../../../../static/DefaultAvatar';
 import { FormTitle } from '../../../../Home/components';
 import './style.scss';
 
-interface Props {}
-
-export const Users = (props: Props) => {
+export const Users = () => {
     const user = useSelector(selectAllUser);
-    const loading = useSelector(selectUserLoading);
+    // const loading = useSelector(selectUserLoading);
     const dispatch = useDispatch();
+    const [page, setPage] = React.useState(1);
     React.useEffect(() => {
         dispatch(getAllUserAsync({ skip: 1, limit: 20 }));
     }, []);
 
-    console.log(user);
+    const handleLoadMore = () => {
+        dispatch(getAllUserAsync({ skip: page + 1, limit: 20 }));
+        setPage(page + 1);
+    };
+
+    const handleSearch = (keyword: string) => {
+        console.log(keyword);
+    };
+
     return (
         <ContentWrapper>
             <div className="d-flex justify-content-between align-items-center">
                 <FormTitle title="QUẢN LÝ NGƯỜI DÙNG" bold />
-                {/* <button
-          className="btn btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#createAddress"
-        >
-          <i className="bi bi-plus-square"></i> | Thêm
-        </button> */}
             </div>
+            <SearchInput
+                handleSearch={handleSearch}
+                placeholder="Nhập số điện thoại hoặc tên"
+            />
             <hr />
+            {/* {loading ? (
+                <LoadingComponent />
+            ) : ( */}
             <table className="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -42,6 +48,7 @@ export const Users = (props: Props) => {
                         <th scope="col">Tên</th>
                         <th scope="col">Địa Chỉ</th>
                         <th scope="col">SĐT</th>
+                        <th scope="col">Tùy chỉnh</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,22 +66,39 @@ export const Users = (props: Props) => {
                                 ></img>
                             </td>
                             <td>{e.displayName}</td>
-                            <td>{e.address}</td>
-                            <td>{e.phone}</td>
-                            {/* <td>
-                <Link to={`/dashboard/address/${e._id}`}>Chi tiết</Link>
-              </td> */}
+                            <td>
+                                {e.address || (
+                                    <span className="text-warning">
+                                        Chưa cập nhật
+                                    </span>
+                                )}
+                            </td>
+                            <td>
+                                {e.phone || (
+                                    <span className="text-warning">
+                                        Chưa cập nhật
+                                    </span>
+                                )}
+                            </td>
+                            <td>
+                                <Link
+                                    to={'#'}
+                                    // onClick={() => handleEditStaff(e)}
+                                >
+                                    Chi tiết
+                                </Link>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div
-                style={{
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    width: 'fit-content',
-                }}
-            ></div>
+            <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={handleLoadMore}
+            >
+                Xem thêm
+            </button>
         </ContentWrapper>
     );
 };

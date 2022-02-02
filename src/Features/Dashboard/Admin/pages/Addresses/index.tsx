@@ -63,7 +63,7 @@ export const Addresses = () => {
                                 <th scope="col">#</th>
                                 <th scope="col">Khu vực</th>
                                 <th scope="col">Vùng</th>
-                                <th scope="col"></th>
+                                <th scope="col">Tùy chỉnh</th>
                             </tr>
                         </thead>
                         <tbody>

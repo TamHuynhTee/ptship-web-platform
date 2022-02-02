@@ -18,3 +18,8 @@ export interface currentUserModel {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface IParamGetAll {
+    skip: number;
+    limit: number;
+}

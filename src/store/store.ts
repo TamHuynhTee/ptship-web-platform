@@ -9,12 +9,14 @@ import addressSlice from '../Slice/Address';
 import userSlice from '../Slice/User';
 import staffSlice from '../Slice/Staff';
 import authSlice from '../Slice/Auth';
+import orderSlice from '../Slice/Order';
 
 const reducer = {
     address: addressSlice,
     user: userSlice,
     staff: staffSlice,
     auth: authSlice,
+    order: orderSlice,
 };
 
 export type IRootState = StateFromReducersMapObject<typeof reducer>;

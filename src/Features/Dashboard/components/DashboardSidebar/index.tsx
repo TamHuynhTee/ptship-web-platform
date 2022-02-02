@@ -39,48 +39,43 @@ function DashboardSidebar(props: DashboardSidebarProps) {
                         </Link>
                     </li>
                 </ul>
+                <SidebarTitle title="QUẢN LÝ" />
                 {role === 1 ? (
-                    <>
-                        <SidebarTitle title="QUẢN LÝ" />
-                        <ul className="dashboardSidebar-body-list">
-                            <li>
-                                <Link to="#">
-                                    <SidebarIcon type="bi-graph-up-arrow" />
-                                    Thống kê
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`${match.url}/user`}>
-                                    <SidebarIcon type="bi-people" />
-                                    Người dùng
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`${match.url}/staff`}>
-                                    <SidebarIcon type="bi-person-badge" />
-                                    Nhân viên
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`${match.url}/address`}>
-                                    <SidebarIcon type="bi-geo-alt" />
-                                    Địa chỉ
-                                </Link>
-                            </li>
-                        </ul>
-                    </>
+                    <ul className="dashboardSidebar-body-list">
+                        <li>
+                            <Link to={`${match.url}/statistic`}>
+                                <SidebarIcon type="bi-graph-up-arrow" />
+                                Thống kê
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={`${match.url}/user`}>
+                                <SidebarIcon type="bi-people" />
+                                Người dùng
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={`${match.url}/staff`}>
+                                <SidebarIcon type="bi-person-badge" />
+                                Nhân viên
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={`${match.url}/address`}>
+                                <SidebarIcon type="bi-geo-alt" />
+                                Địa chỉ
+                            </Link>
+                        </li>
+                    </ul>
                 ) : (
-                    <>
-                        <SidebarTitle title="QUẢN LÝ" />
-                        <ul className="dashboardSidebar-body-list">
-                            <li>
-                                <Link to="#">
-                                    <SidebarIcon type="bi-graph-up-arrow" />
-                                    Thống kê
-                                </Link>
-                            </li>
-                        </ul>
-                    </>
+                    <ul className="dashboardSidebar-body-list">
+                        <li>
+                            <Link to={`${match.url}/statistic`}>
+                                <SidebarIcon type="bi-graph-up-arrow" />
+                                Thống kê
+                            </Link>
+                        </li>
+                    </ul>
                 )}
                 <div className="d-flex align-items-center flex-column mt-auto">
                     <button

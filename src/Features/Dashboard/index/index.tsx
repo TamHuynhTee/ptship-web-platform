@@ -1,20 +1,20 @@
 import React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router';
-import authApi from '../../../apis/Apis/authApi';
-import DashboardHeader from '../components/DashboardHeader';
-import DashboardScreen from '../components/DashboardMainScreen';
-import DashboardSidebar from '../components/DashboardSidebar';
-import { useHistory } from 'react-router';
-import './style.scss';
-import { notifyError, notifySuccess } from '../../../utils/notify';
-import { ChangePassForm } from '../components';
-import { Profile } from '../components/Profile';
-import { DashboardHome } from '../components/DashboardHome';
-import { LogoutConfirm } from '../components/LogoutConfirm';
-import { Addresses, Staffs, Users } from '../Admin/pages';
 import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router';
+import { setCurrentUser } from '../../../Slice/Auth';
 import { selectCurrentUser } from '../../../Slice/Auth/selector';
 import { getCurrentUserAsync } from '../../../Slice/Auth/thunk';
+import { notifyError, notifySuccess } from '../../../utils/notify';
+import { Addresses, Staffs, Users } from '../Admin/pages';
+import { ChangePassForm } from '../components';
+import DashboardHeader from '../components/DashboardHeader';
+import { DashboardHome } from '../components/DashboardHome';
+import DashboardScreen from '../components/DashboardMainScreen';
+import DashboardSidebar from '../components/DashboardSidebar';
+import { LogoutConfirm } from '../components/LogoutConfirm';
+import { Profile } from '../components/Profile';
+import { Statistic } from '../Statistic';
+import './style.scss';
 
 export const Dashboard = () => {
     const { path } = useRouteMatch();
@@ -22,10 +22,11 @@ export const Dashboard = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectCurrentUser);
     const handleLogout = () => {
+        history.push('/');
         localStorage.removeItem('token');
         localStorage.removeItem('role');
+        setCurrentUser(undefined);
         notifySuccess('Đăng xuất thành công');
-        history.push('/');
     };
 
     React.useEffect(() => {
@@ -63,6 +64,10 @@ export const Dashboard = () => {
                         <Route
                             path={`${path}/resetPass`}
                             component={ChangePassForm}
+                        />
+                        <Route
+                            path={`${path}/statistic`}
+                            component={Statistic}
                         />
                         {/* Admin routes */}
                         <Route path={`${path}/user`} component={Users} />

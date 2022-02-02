@@ -4,15 +4,14 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import addressApi from '../../../../apis/Apis/addressApi';
-import authApi from '../../../../apis/Apis/authApi';
-import { IUpdateUserBody } from '../../../../apis/body/authBody';
 import { ButtonSpinner, ContentWrapper } from '../../../../components';
 import { ColorLabel } from '../../../../components/PinkLabel';
 import storage from '../../../../firebase';
 import defaultAvatar from '../../../../images/Logo128.png';
 import { selectAddressList } from '../../../../Slice/Address/selector';
 import { getAllAddressAsync } from '../../../../Slice/Address/thunk';
+import { getCurrentUserAsync } from '../../../../Slice/Auth/thunk';
+import { updateUserApi } from '../../../../SliceApis/Auth/auth.api';
 import { DEFAULT_AVATAR } from '../../../../static/DefaultAvatar';
 import { notifyError, notifySuccess } from '../../../../utils/notify';
 import { EditSchema } from '../../../../validates';
@@ -110,18 +109,18 @@ export const Profile = (props: ProfileProps) => {
                 getDownloadURL(uploadTask.snapshot.ref).then(
                     (downloadURL: string) => {
                         setTimeout(async () => {
-                            const body: IUpdateUserBody = {
+                            const res = await updateUserApi({
                                 displayName: displayName,
                                 phone: phone,
                                 address: address,
                                 avatar: downloadURL,
                                 code: code,
-                            };
-                            const res: any = await authApi.updateUser(body);
+                            });
                             if (res.data) {
                                 notifySuccess(
                                     'Cập nhật ảnh đại diện thành công'
                                 );
+                                dispatch(getCurrentUserAsync());
                                 setEditAvatar(false);
                             } else {
                                 notifyError('Cập nhật ảnh đại diện thất bại');
@@ -137,16 +136,16 @@ export const Profile = (props: ProfileProps) => {
         e.preventDefault();
         return new Promise((resolve) => {
             setTimeout(async () => {
-                const body: IUpdateUserBody = {
+                const res = await updateUserApi({
                     displayName: data.displayName,
                     phone: data.phone,
                     address: data.address,
                     avatar: DEFAULT_AVATAR,
                     code: data.code,
-                };
-                const res: any = await authApi.updateUser(body);
+                });
                 if (res.data) {
                     notifySuccess('Cập nhật thành công');
+                    dispatch(getCurrentUserAsync());
                 } else {
                     notifyError('Cập nhật thất bại');
                 }
@@ -169,7 +168,7 @@ export const Profile = (props: ProfileProps) => {
                             <input
                                 type="file"
                                 id="file"
-                                accept=".jpg,.png,.jpeg"
+                                accept="image/*"
                                 ref={avatarInput}
                                 onChange={showNewAvatar}
                                 hidden

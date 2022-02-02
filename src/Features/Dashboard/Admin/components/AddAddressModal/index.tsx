@@ -3,7 +3,6 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import Select from 'react-select';
-import { ICreateAddressBody } from '../../../../../apis/body/addressBody';
 import {
     ButtonSpinner,
     CustomModal,
@@ -35,11 +34,10 @@ export const AddAddressModal = (props: ModalProps) => {
         e.preventDefault();
         return new Promise((resolve) => {
             setTimeout(async () => {
-                const body: ICreateAddressBody = {
+                const res = await createNewAddressApi({
                     address: data.address,
                     key: data.key,
-                };
-                const res: any = await createNewAddressApi(body);
+                });
                 if (res.data) {
                     dispatch(getAllAddressAsync());
                     notifySuccess('Đã tạo địa chỉ mới');

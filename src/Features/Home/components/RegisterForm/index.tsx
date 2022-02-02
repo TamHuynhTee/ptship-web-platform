@@ -1,18 +1,16 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { registerApi } from '../../../../SliceApis/Auth/auth.api';
+import { notifyError, notifySuccess } from '../../../../utils/notify';
 import { SignUpSchema } from '../../../../validates';
-import authApi from '../../../../apis/Apis/authApi';
-import { notifySuccess } from '../../../../utils/notify';
 import { FormTitle } from '../FormTitle';
-import { IRegisterBody } from '../../../../apis/body/authBody';
 
 interface RegisterFormProps {
     ChangePage: Function;
 }
 
 export const RegisterForm = (props: RegisterFormProps) => {
-    const [error, setError] = React.useState('');
     const [showPass, setShowPass] = React.useState(false);
     const {
         register,
@@ -34,24 +32,18 @@ export const RegisterForm = (props: RegisterFormProps) => {
     const onSubmit = (data: any, e: any) => {
         e.preventDefault();
         return new Promise((resolve) => {
-            setTimeout(() => {
-                const body: IRegisterBody = {
+            setTimeout(async () => {
+                const response = await registerApi({
                     phone: data.phone,
                     password: data.password,
                     displayName: data.name,
-                };
-                const response: any = authApi.register(body);
-                response
-                    .then((res: any) => {
-                        if (!res.data) setError('Số điện thoại đã tồn tại');
-                        else {
-                            reset();
-                            setError('');
-                            props.ChangePage(1);
-                            notifySuccess('Tạo tài khoản thành công');
-                        }
-                    })
-                    .catch((err: any) => console.log(err));
+                });
+                if (!response.data) notifyError('Số điện thoại đã tồn tại');
+                else {
+                    reset();
+                    props.ChangePage(1);
+                    notifySuccess('Tạo tài khoản thành công');
+                }
                 resolve(true);
             }, 1500);
         });
@@ -61,9 +53,6 @@ export const RegisterForm = (props: RegisterFormProps) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="login-form">
                 <FormTitle title="TÀI KHOẢN MỚI" />
-                {error !== '' && (
-                    <div className="alert alert-danger">{error}</div>
-                )}
                 {/* input */}
                 <div className="form-group">
                     <label htmlFor="phone" className="form-label">

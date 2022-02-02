@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StaffStateTypes } from './type';
 import { getAllStaffAsync } from './thunk';
+import { notifyError } from '../../utils/notify';
 
 const initialState: Partial<StaffStateTypes> = {
     loading: false,
@@ -25,7 +26,18 @@ export const staffSlice = createSlice({
             action: PayloadAction<any>
         ) => {
             state.loading = false;
-            state.allStaff = action.payload;
+            if (action.payload.list.length > 0)
+                if (!action.payload.skip) {
+                    state.allStaff = action.payload.list;
+                } else {
+                    const newList = [...(state.allStaff || [])].concat(
+                        action.payload.list
+                    );
+                    state.allStaff = newList;
+                }
+            else {
+                notifyError('Không còn dữ liệu');
+            }
         },
         [getAllStaffAsync.rejected.toString()]: (state, action) => {
             state.loading = false;

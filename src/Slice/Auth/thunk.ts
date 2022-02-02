@@ -1,5 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserApi } from '../../SliceApis/Auth/auth.api';
+import { getUserApi, loginApi } from '../../SliceApis/Auth/auth.api';
+import { ILogin } from '../../SliceApis/Auth/auth.interface';
+
+export const loginAsync = createAsyncThunk(
+    'Auth/login',
+    async (login: ILogin): Promise<any> => {
+        const response: any = await loginApi(login);
+        return response.data;
+    }
+);
 
 export const getCurrentUserAsync = createAsyncThunk(
     'Auth/getCurrentUser',

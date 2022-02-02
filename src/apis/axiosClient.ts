@@ -30,7 +30,7 @@ axiosClient.interceptors.response.use(
         return res;
     },
     (err) => {
-        console.log(err.response);
+        // console.log(err.response);
         if (err.response && err.response.data) return err.response.data;
         return Promise.reject(err);
     }

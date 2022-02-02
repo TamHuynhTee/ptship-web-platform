@@ -1,18 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import authApi from '../../../../apis/Apis/authApi';
-import { IChangePasswordBody } from '../../../../apis/body/authBody';
 import { ContentWrapper } from '../../../../components';
 import { ColorLabel } from '../../../../components/PinkLabel';
-import { notifySuccess } from '../../../../utils/notify';
+import { changePassApi } from '../../../../SliceApis/Auth/auth.api';
+import { notifyError, notifySuccess } from '../../../../utils/notify';
 import { ChangePassSchema } from '../../../../validates';
 import { FormTitle } from '../../../Home/components';
 
-interface ChangePassFormProps {}
-
-export const ChangePassForm = (props: ChangePassFormProps) => {
-    const [error, setError] = React.useState('');
+export const ChangePassForm = () => {
     const {
         register,
         handleSubmit,
@@ -33,15 +29,13 @@ export const ChangePassForm = (props: ChangePassFormProps) => {
 
     const onSubmit = (data: any, e: any) => {
         e.preventDefault();
-        setError('');
         return new Promise((resolve) => {
             setTimeout(async () => {
-                const body: IChangePasswordBody = {
+                const response = await changePassApi({
                     oldPassword: data.currentPassword,
                     newPassword: data.newPassword,
-                };
-                const response: any = await authApi.changePass(body);
-                if (!response.data) setError('Sai mật khẩu hiện tại');
+                });
+                if (!response.data) notifyError('Sai mật khẩu hiện tại');
                 else {
                     notifySuccess('Đổi mật khẩu thành công');
                     reset();
@@ -55,9 +49,6 @@ export const ChangePassForm = (props: ChangePassFormProps) => {
         <ContentWrapper>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormTitle title="ĐỔI MẬT KHẨU" />
-                {error !== '' && (
-                    <div className="alert alert-danger">{error}</div>
-                )}
                 <div className="form-group mb-2">
                     <ColorLabel
                         title="Nhập mật khẩu hiện tại"

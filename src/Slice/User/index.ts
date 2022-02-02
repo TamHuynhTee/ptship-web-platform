@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserStateTypes } from './type';
 import { getAllUserAsync } from './thunk';
+import { notifyError } from '../../utils/notify';
 
 const initialState: Partial<UserStateTypes> = {
     loading: false,
@@ -25,9 +26,20 @@ export const userSlice = createSlice({
             action: PayloadAction<any>
         ) => {
             state.loading = false;
-            state.allUser = action.payload;
+            if (action.payload.list.length > 0)
+                if (!action.payload.skip) {
+                    state.allUser = action.payload.list;
+                } else {
+                    const newList = [...(state.allUser || [])].concat(
+                        action.payload.list
+                    );
+                    state.allUser = newList;
+                }
+            else {
+                notifyError('Không còn dữ liệu');
+            }
         },
-        [getAllUserAsync.rejected.toString()]: (state, action) => {
+        [getAllUserAsync.rejected.toString()]: (state) => {
             state.loading = false;
         },
     },
